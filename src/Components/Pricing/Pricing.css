@@ -1,0 +1,39 @@
+.price-card{
+    height: 260px;
+    background-color: #0a0a0a;
+    /* height: 400px; */
+    /* width: 320px; */
+    border: 1px solid rgb(37, 37, 37);
+    color:white;
+}
+.price-card p{
+    color:rgb(121, 111, 111)
+
+}
+.buy-btn-price{
+    background-color: #1e90ca;
+    /* Linear Gradient */
+    background-image: linear-gradient(to right, #1e90ca, #49d688);
+    color: white;
+    border: none;
+    width: 70%;
+    height: 40px;
+    border-radius: 5px;
+
+}
+.faq-main-div{
+    background-color: #0a0a0a;
+    border: 1px solid rgb(37, 37, 37);
+    margin-top: 10px;
+    border-radius: 7px;
+    color: rgb(167, 164, 164);
+    width: 100%;
+
+}
+.faq-inner-div{
+    background-color: #0a0a0a;
+    border: 1px solid rgb(37, 37, 37);
+    font-size: 14px;
+    color:azure
+
+}

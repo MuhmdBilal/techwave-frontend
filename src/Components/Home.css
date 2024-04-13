@@ -1,0 +1,85 @@
+.home-h{
+    height: 93.3vh;
+    overflow-y: scroll;
+    max-height: auto;
+    background-color: black;
+    color: white;
+
+}
+.home-h::-webkit-scrollbar{
+    display:none;
+}
+.bg-img-div{
+    background: url(../Media/dashboard.png); 
+    background-size: cover;
+    /* width: 98.70vw; */
+   height:30vh;
+   /* border: 1px solid white; */
+   background-size: 100% 100%;  
+   background-repeat: no-repeat;
+   position: relative;
+   overflow: hidden;
+}
+.bg-img-div h1{
+    font-weight: 300;
+}
+.bg-home-heading{
+    font-weight: 700 !important;
+}
+.home-card-div{
+    background-color: #0a0a0a;
+    height: 400px;
+    width: 320px;
+    border: 1px solid rgb(37, 37, 37);
+    border-radius: 10px;
+}
+.home-card-div p{
+    font-size: 14px;
+    color: rgb(204, 196, 196);
+}
+.right-home-div{
+    border-left: 1px solid rgb(99, 94, 94);
+    height: 100%;
+}
+.right-home-div p{
+    font-size: 14px;
+    color: rgb(204, 196, 196);
+}
+.green-dot{
+    background-color: green;
+    height: 13px;
+    width: 13px;
+    border-radius: 5px;
+
+}
+.grey-dot{
+    background-color: grey;
+    height: 13px;
+    width: 13px;
+    border-radius: 5px;
+
+}
+.card-img-div{
+    background-color: #1e90ca;
+    /* Linear Gradient */
+    background-image: linear-gradient(to right, #1e90ca, #49d688);
+    height: 120px;
+    width: 120px;
+    border-radius: 60px;
+}
+.home-card-icon{
+    font-size: 55px;
+}
+.visit-btn{
+    background-color: #1e90ca;
+    /* Linear Gradient */
+    background-image: linear-gradient(to right, #1e90ca, #49d688);
+    border: none;
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    height:40px;
+    width: 100px;
+    border-radius: 5px;
+    
+}

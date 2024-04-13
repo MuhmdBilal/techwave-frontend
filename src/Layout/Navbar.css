@@ -1,0 +1,49 @@
+.navbar-h{
+    height: 100px;
+
+
+}
+.navbar-p{
+    left: 25%;
+    
+
+}
+.navbar-brand{
+    font-size: 30px;
+    font-weight: 600;   
+}
+.connect-btn{
+    background-color: #1e90ca;
+    /* Linear Gradient */
+    background-image: linear-gradient(to right, #1e90ca, #49d688);
+    height: 50px;
+    font-size: 21px;
+    
+    color: white;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+}
+@media screen and (max-width: 992px){
+    .navbar-p{
+        position: relative;
+        left: 0%;
+    
+
+    }
+    .connect-btn{
+        background-color: #1e90ca;
+        /* Linear Gradient */
+        background-image: linear-gradient(to right, #1e90ca, #49d688);
+        height: 50px;
+        font-size: 16px;
+        
+        color: white;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+    }
+   
+
+
+}
