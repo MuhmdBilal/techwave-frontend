@@ -64,7 +64,7 @@ const AudioGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
           toast.success("Audio Genrate successfully.");
           setPrompt("");
           setError(false)
-          // getImage();
+          getImage();
         }
       } else {
         toast.error("token is missing , please signIn again");
