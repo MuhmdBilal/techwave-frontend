@@ -66,11 +66,11 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
          
         </div>
         <NavLink onClick={() => {
-            setActive("/") }} to="/">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-5 ${active === "/" && "btn-active"}`}>
+            setActive("/home") }} to="/home">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-5 ${active === "/home" && "btn-active"}`}>
           <div className="d-flex ps-3 pt-2">
-            <IoHomeOutline className={`mt-1 sidebar-icon ${active === "/" && "icon-active"}`} />
-            <p className={`ps-2 nav-btn ${active === "/" && "is-active"}`}>Home</p>
+            <IoHomeOutline className={`mt-1 sidebar-icon ${active === "/home" && "icon-active"}`} />
+            <p className={`ps-2 nav-btn ${active === "/home" && "is-active"}`}>Home</p>
           </div>
         </button>
       </NavLink>

@@ -17,6 +17,7 @@ import Placeholder from "./Components/Placeholder/Placeholder";
 import SignUp from "./Components/signup/SignUp";
 import SignIn from "./Components/signIn/SignIn";
 import PrivateComponent from "./privateComponent";
+import ForgetPassword from "./Components/forgetPassword/ForgetPassword";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SignIn/>}/>
           <Route path="/sign-up" element={<SignUp/>}/>
+          <Route  path="/forget-password" element={<ForgetPassword/>}/>
           <Route element={<PrivateComponent/>} >
           <Route
             path="/home"

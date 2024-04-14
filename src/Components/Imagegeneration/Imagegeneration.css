@@ -1,4 +1,4 @@
-.img-container-div-w{
+arrow-icon-btn.img-container-div-w{
     font-size: 12px !important;
 }
 .img-container-div-icon{
@@ -22,6 +22,15 @@
     background-color:#1b1b1b;
     color: white;
     border:none;
+    width: 100%;
+    /* text */
+}
+.arrow-icon-btn-price{
+    background-color:#1b1b1b;
+    color: white;
+    border:none;
+    width: 85%;
+    /* text */
 }
 .dropdown-content{
     max-height: 300px;

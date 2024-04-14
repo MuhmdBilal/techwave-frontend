@@ -50,7 +50,6 @@ const SignUp = () => {
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
          formData 
       );
-      console.log("response.data", response.data);
       if(response.status == 201){
         toast.success(response.data.msg)
         navigate("/home")

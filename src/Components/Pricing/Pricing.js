@@ -14,6 +14,34 @@ const Pricing = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   const [iconfive, setIconfive] = useState(true);
   const [iconsix, setIconsix] = useState(true);
   const [iconseven, setIconseven] = useState(true);
+  const [paymentMethod15, setPaymentMethod15] = useState('');
+  const [paymentMethodError15, setPaymentMethodError15] = useState(false);
+  const [paymentMethod20, setPaymentMethod20] = useState('');
+  const [paymentMethod30, setPaymentMethod30] = useState('');
+  const [paymentMethod40, setPaymentMethod40] = useState('');
+  const handlePaymentMethodChange15 = (event) => {
+    setPaymentMethod15(event.target.value);
+  };
+  const handlePaymentMethodChange20 = (event) => {
+    setPaymentMethod20(event.target.value);
+  };
+  const handlePaymentMethodChange30 = (event) => {
+    setPaymentMethod30(event.target.value);
+  };
+  const handlePaymentMethodChange40 = (event) => {
+    setPaymentMethod40(event.target.value);
+  };
+
+  const handleBuy15 = (value)=>{
+    try{
+    if(!paymentMethod15){
+      setPaymentMethodError15(true)
+      return
+    }
+    }catch(e){
+      console.log("e", e);
+    }
+  }
   return (
     <>
     <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
@@ -47,8 +75,21 @@ const Pricing = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
                     <h3>Personal</h3>
                     <h1>$15</h1>
                     <p>150 Tokens</p>
+                    <select className="arrow-icon-btn-price p-1 ms-3 me-3"
+                    onChange={handlePaymentMethodChange15}
+                    value={paymentMethod15}
+                    >
+                      <option  defaultChecked >Select payment method</option>
+                      <option value="usdt">USDT</option>
+                      <option value="ethereum">Ethereum</option>
+                    </select>
+                    {
+                      paymentMethodError15 && !paymentMethod15  && (
+                        <span className="text-danger">Please select payment method</span>
+                      )
+                    }
                     <div>
-                      <button className="buy-btn-price">BUY</button>
+                      <button className="buy-btn-price mb-3 mt-3" onClick={()=>handleBuy15(15)}>BUY</button>
                     </div>
                   </div>
                 </div>
@@ -57,6 +98,14 @@ const Pricing = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
                     <h3>Premium</h3>
                     <h1>$20</h1>
                     <p>150 Tokens</p>
+                    <select className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3"
+                    onChange={handlePaymentMethodChange20}
+                    value={paymentMethod20}
+                    >
+                      <option  defaultChecked >Select payment method</option>
+                      <option value="usdt">USDT</option>
+                      <option value="ethereum">Ethereum</option>
+                    </select>
                     <div>
                       <button className="buy-btn-price">BUY</button>
                     </div>
@@ -67,6 +116,14 @@ const Pricing = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
                     <h3>Enterprice</h3>
                     <h1>$30</h1>
                     <p>150 Tokens</p>
+                    <select className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3"
+                    onChange={handlePaymentMethodChange30}
+                    value={paymentMethod30}
+                    >
+                      <option  defaultChecked >Select payment method</option>
+                      <option value="usdt">USDT</option>
+                      <option value="ethereum">Ethereum</option>
+                    </select>
                     <div>
                       <button className="buy-btn-price">BUY</button>
                     </div>
@@ -77,6 +134,14 @@ const Pricing = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
                     <h3>Diamond</h3>
                     <h1>$40</h1>
                     <p>150 Tokens</p>
+                    <select className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3" 
+                    onChange={handlePaymentMethodChange40}
+                    value={paymentMethod40}
+                    >
+                      <option  defaultChecked >Select payment method</option>
+                      <option value="usdt">USDT</option>
+                      <option value="ethereum">Ethereum</option>
+                    </select>
                     <div>
                       <button className="buy-btn-price">BUY</button>
                     </div>

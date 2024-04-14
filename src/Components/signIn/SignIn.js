@@ -85,7 +85,7 @@ const SignIn = () => {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+              {errors.email && <div className="text-danger">{errors.email}</div>}
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputPassword1" className="form-label">
@@ -115,10 +115,12 @@ const SignIn = () => {
                   />
                 )}
               </div>
-              {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+              {errors.password && <div className="text-danger">{errors.password}</div>}
             </div>
-
-            <div className="d-grid gap-2 mt-4">
+              <div className="d-flex justify-content-end">
+                <Link to="/forget-password">Forget Password</Link>
+              </div>
+            <div className="d-grid gap-2 mt-3">
               <button className="btn btn-primary" type="submit" disabled={loading}>
               {loading ? (
                   <>

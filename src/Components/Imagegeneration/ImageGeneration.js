@@ -10,8 +10,10 @@ import Sidebar from "../../Layout/Sidebar";
 import Navbar from "../../Layout/Navbar";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
+  const navigate = useNavigate()
   const [active_div, setActive_div] = useState(true);
   const [dropActive, setDropActive] = useState(false);
   const [dropTwoActive, setDropTwoActive] = useState(false);
@@ -20,6 +22,32 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   const [record, setRecord] = useState([]);
   const [recordLoading, setRecordLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [count, setCount] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(
+    "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"
+  );
+  const [selectedWidth, setSelectedWidth] = useState("1024");
+  const [selectedHeight, setSelectedHeight] = useState("1024");
+  const handleMinus = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+
+  const handlePlus = () => {
+    if (count < 4) {
+      setCount(count + 1);
+    }
+  };
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+  const handleWidthChange = (event) => {
+    setSelectedWidth(event.target.value);
+  };
+  const handleHeightChange = (event) => {
+    setSelectedHeight(event.target.value);
+  };
   const getToken = localStorage.getItem("token");
   const toggle = () => {
     setActive_div(!active_div);
@@ -28,17 +56,25 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   const dropdown = () => {
     setDropActive(!dropActive);
   };
+
   const handleGenerate = async () => {
     try {
       if (!prompt) {
         setError(true);
         return;
       }
+      const object = {
+        prompt,
+        selectedOption,
+        selectedWidth,
+        selectedHeight,
+        count
+      }
       if (getToken) {
         setLoading(true);
         let response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/replicate/image-generate`,
-          prompt,
+          object,
           {
             headers: {
               Authorization: `Bearer ${getToken}`,
@@ -48,13 +84,18 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
         if (response.status == 200) {
           toast.success(response?.data?.message);
           setPrompt("");
-          getImage()
+          getImage();
         }
       } else {
         toast.error("token is missing , please signIn again");
       }
     } catch (e) {
-      toast.error(e.message);
+      if(e.response.status == 401){
+        toast.error("Authentication failed! please Login again")
+        navigate("/")
+      } else{
+        toast.error(e.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -71,7 +112,7 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
       );
       setRecord(response?.data?.result);
     } catch (e) {
-      toast.error(e.message);
+      console.log("e", e);
     } finally {
       setRecordLoading(false);
     }
@@ -166,9 +207,15 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
                   <>
                     {record?.length > 0 ? (
                       record?.map((item, index) => {
-                        return <div className="col-md-4 p-2 mb-2 mt-2" key={index}>
-                          <img  src={item?.image} alt="image" className="img-fluid" />
-                        </div>;
+                        return (
+                          <div className="col-md-4 p-2 mb-2 mt-2" key={index}>
+                            <img
+                              src={item?.image}
+                              alt="image"
+                              className="img-fluid"
+                            />
+                          </div>
+                        );
                       })
                     ) : (
                       <div className="d-flex justify-content-center pt-5 pb-5">
@@ -186,99 +233,80 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
             >
               <Scrollbars style={{ width: "100%", height: 500 }}>
                 <div className="Main-div position-relative p-2">
-                  <div className="dropdown-head d-flex justify-content-between ">
-                    <div className="d-flex">
-                      <div>
-                        <img src={a} alt="a" className="dropdown-icon-img" />
-                      </div>
-                      <div className=" px-2 d-flex flex-column">
-                        <span className="light-p">Model</span>
-                        <span> DALL.E 3</span>
-                      </div>
-                    </div>
-                    <div>
-                      <button onClick={dropdown} className="arrow-icon-btn p-1">
-                        Select Model <IoIosArrowDown />
-                      </button>
+                  {/* <div className="dropdown-head d-flex justify-content-between "> */}
+                  <div className="d-flex">
+                    <div className="px-2 d-flex flex-column">
+                      <span className="light-p">Select Model</span>
+                      {/* <span> DALL.E 3</span> */}
                     </div>
                   </div>
-                  {dropActive && (
-                    <Scrollbars style={{ width: "100%", height: 300 }}>
-                      <div className="dropdown-content d-flex flex-column ">
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                        <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                          Abcdeireonoienvei
-                        </butotn>
-                      </div>
-                    </Scrollbars>
-                  )}
+                  <select
+                    className="arrow-icon-btn p-1"
+                    value={selectedOption}
+                    onChange={handleSelectChange}
+                  >
+                    <option
+                      value="stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4"
+                      checked
+                    >
+                      stable-diffusion
+                    </option>
+                    <option value="stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b">
+                      sdxl
+                    </option>
+                  </select>
                 </div>
 
                 <div className="px-2 mt-5">
                   Number of images:
                   <div className="counting-div mt-2 d-flex">
-                    <button className=" ms-1 d-flex justify-content-center align-items-center">
+                    <button
+                      className="ms-1 d-flex justify-content-center align-items-center"
+                      onClick={handleMinus}
+                    >
                       <TiMinus />
                     </button>
                     <div className="count-input-div d-flex justify-content-center">
-                      2 {/* <input className="" type="number" value="1" /> */}
+                      <span>{count}</span>
                     </div>
-                    <button className="d-flex justify-content-center align-items-center">
+                    <button
+                      className="d-flex justify-content-center align-items-center"
+                      onClick={handlePlus}
+                    >
                       <AiOutlinePlus />
                     </button>
                   </div>
                 </div>
                 <div className="px-2 mt-3">
                   Image Dimensions
-                  <div className="dimension-dropdown-h mt-1 px-2 d-flex justify-content-between align-items-center ">
-                    <p className="mt-3">1024 x 1024px</p>
-                    <button
-                      onClick={() => {
-                        setDropTwoActive(!dropTwoActive);
-                      }}
-                      className="arrow-icon-btn"
+                  <div>
+                    <label className="mt-3 mb-2">Width</label>
+                    <select
+                      className="arrow-icon-btn p-1"
+                      value={selectedWidth}
+                      onChange={handleWidthChange}
                     >
-                      <IoIosArrowDown />
-                    </button>
+                      <option value="1024">1024</option>
+                      <option value="960">960</option>
+                      <option value="896">896</option>
+                      <option value="832">832</option>
+                      <option value="768">768</option>
+                    </select>
                   </div>
-                  {dropTwoActive && (
-                    <div className="dropdown-content d-flex flex-column ">
-                      <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                        1024 x 1792px
-                      </butotn>
-                      <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                        1024 x 1792px
-                      </butotn>
-                      <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                        1792 x 1024px
-                      </butotn>
-                    </div>
-                  )}
+                  <div>
+                    <label className="mt-3 mb-2">Height</label>
+                    <select
+                      className="arrow-icon-btn p-1"
+                      value={selectedHeight}
+                      onChange={handleHeightChange}
+                    >
+                      <option value="1024">1024</option>
+                      <option value="960">960</option>
+                      <option value="896">896</option>
+                      <option value="832">832</option>
+                      <option value="768">768</option>
+                    </select>
+                  </div>
                 </div>
               </Scrollbars>
             </div>
