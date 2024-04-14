@@ -90,7 +90,7 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
         toast.error("token is missing , please signIn again");
       }
     } catch (e) {
-      if(e.response.status == 401){
+      if(e?.response?.status == 401){
         toast.error("Authentication failed! please Login again")
         navigate("/")
       } else{

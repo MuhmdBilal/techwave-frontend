@@ -50,14 +50,14 @@ const SignUp = () => {
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
          formData 
       );
-      if(response.status == 201){
+      if(response?.status == 201){
         toast.success(response.data.msg)
         navigate("/home")
         localStorage.setItem("userDetails", JSON.stringify(response.data.result))
         localStorage.setItem("token", response.data.token)
       }
     } catch (err) {
-      if(err.response.status == 400){
+      if(err?.response?.status == 400){
         toast.error(err.response.data.msg)
       }else{
         toast.error(err.message)

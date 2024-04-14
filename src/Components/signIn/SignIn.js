@@ -49,14 +49,14 @@ const SignIn = () => {
         `${process.env.REACT_APP_API_URL}/api/auth/login`,
         formData
       );
-      if(response.status == 200){
+      if(response?.status == 200){
         toast.success(response.data.msg)
         navigate("/home")
         localStorage.setItem("userDetails", JSON.stringify(response.data.result))
       }
     }catch(err){
       console.log("err", err)
-      if(err.response.status == 400){
+      if(err?.response?.status == 400){
         toast.error(err.response.data.msg)
       }else{
         toast.error(err.message)
