@@ -94,8 +94,7 @@ const Pricing = ({
         setPaymentMethodLoading15(true);
         if (userAddress) {
           let contract = integrateContract();
-          let value = 1;
-          let price = web3.utils.toWei(value.toString(), "ether");
+          let price = web3.utils.toWei(num.toString(), "ether");
           let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
           let transfer = await contract.methods
             .transfer(recipient, price)
@@ -141,7 +140,7 @@ const Pricing = ({
         setPaymentMethodLoading15(true);
         if (userAddress) {
           const bnbRate = await getBNBRate();
-          const bnbAmount = calculateBNBAmount(1, bnbRate);
+          const bnbAmount = calculateBNBAmount(num, bnbRate);
           const userBalance = await checkBNBBalance();
           if (userBalance >= bnbAmount) {
             const recipientAddress =
