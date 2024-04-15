@@ -68,7 +68,7 @@ const Navbar = ({ toggleSidebar, showSidebar,setCredit,credit }) => {
         })
         setCredit(response?.data?.result)
       }else {
-        toast.error("token is missing , please signIn again");
+        // toast.error("token is missing , please signIn again");
       }
     }catch(e){
       console.log("e", e);

@@ -53,6 +53,7 @@ const SignIn = () => {
         toast.success(response.data.msg)
         navigate("/home")
         localStorage.setItem("userDetails", JSON.stringify(response.data.result))
+        localStorage.setItem("token", response.data.token)
       }
     }catch(err){
       console.log("err", err)
