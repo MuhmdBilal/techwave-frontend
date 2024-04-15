@@ -3,11 +3,12 @@ import Navbar from "../../Layout/Navbar";
 import Sidebar from "../../Layout/Sidebar";
 import "./Placeholder.css";
 
-const Placeholder = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
+const Placeholder = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credit }) => {
   return (
     <>
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
-      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
+                credit={credit}/>
       <div className="col-lg-9 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="row">

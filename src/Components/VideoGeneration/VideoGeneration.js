@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
+const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredit,credit  }) => {
   const [active_div, setActive_div] = useState(true);
   const navigate = useNavigate()
   const [dropActive, setDropActive] = useState(false);
@@ -39,6 +39,7 @@ const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   const dropdown = () => {
     setDropActive(!dropActive);
   };
+  console.log("credit", credit.credit);
   const handleGenerate = async () => {
     try {
       if (!prompt) {
@@ -51,7 +52,8 @@ const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
         selectedValue,
       };
       if (getToken) {
-        setLoading(true);
+        if(credit.credit >0 ){
+          setLoading(true);
         let response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/replicate/video-generate`,
           object,
@@ -62,10 +64,21 @@ const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
           }
         );
         if (response.status == 200) {
-          toast.success("Video Genrate successfully.");
+          toast.success("Video Generate successfully.");
+          let responseCredit = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+            {
+              headers: {
+                Authorization: `Bearer ${getToken}`,
+              },
+            })
+          setCredit(responseCredit?.data?.result)
           setPrompt("");
           getImage();
         }
+        } else{
+          toast.error("Please make a purchase to add credit first.")
+        }
+        
       } else {
         toast.error("token is missing , please signIn again");
       }
@@ -103,7 +116,8 @@ const VideoGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   return (
     <>
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
-      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
+                credit={credit}/>
       <div className="col-lg-9 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">

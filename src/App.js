@@ -21,12 +21,11 @@ import ForgetPassword from "./Components/forgetPassword/ForgetPassword";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
-
+ const [credit,setCredit] = useState();
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
   const handleLinkClick = () => {
-    // Close the sidebar when a link is clicked
     setShowSidebar(!showSidebar);
   };
 
@@ -45,6 +44,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -55,6 +56,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -65,6 +68,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -75,6 +80,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -85,6 +92,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -95,6 +104,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -105,6 +116,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />
@@ -115,6 +128,8 @@ function App() {
                 handleLinkClick={handleLinkClick}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                setCredit={setCredit}
+                credit={credit}
               />
             }
           />

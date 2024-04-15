@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import "./Navbar.css";
 import {
@@ -9,6 +9,8 @@ import {
   useWeb3ModalState,
   useWeb3ModalTheme,
 } from '@web3modal/ethers5/react';
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const projectId = "57c3ed3f7633af987eda789d503edfee"
 const chains = [
@@ -52,9 +54,29 @@ createWeb3Modal({
   enableAnalytics: true,
   themeMode: 'dark',
 });
-const Navbar = ({ toggleSidebar, showSidebar }) => {
+const Navbar = ({ toggleSidebar, showSidebar,setCredit,credit }) => {
   const { loading, address } = useWeb3ModalState();
-  console.log("address", address);
+  const getToken = localStorage.getItem("token");
+  const getCredit = async()=>{
+    try{
+      if(getToken){
+        let response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken}`,
+          },
+        })
+        setCredit(response?.data?.result)
+      }else {
+        toast.error("token is missing , please signIn again");
+      }
+    }catch(e){
+      console.log("e", e);
+    }
+  }
+  useEffect(()=>{
+    getCredit()
+  },[])
   return (
     <div className="col-lg-9 navbar-p order-lg-2 bg-black position-absolute order-1" >
       <div className="row" >
@@ -84,9 +106,12 @@ const Navbar = ({ toggleSidebar, showSidebar }) => {
               >
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    {/* <a class="nav-link active" aria-current="page" href="#">Home</a> */}
+                     {/* <a class="nav-link active" aria-current="page" href="#">Home</a> */}
                   </li>
                 </ul>
+                <div className="me-2 box-style">
+                  <span className="text-white"> Credit: {credit?.credit}</span>
+                </div>
                 <w3m-button />
               </div>
             </div>

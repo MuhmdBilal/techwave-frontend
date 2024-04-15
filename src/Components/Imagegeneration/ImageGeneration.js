@@ -11,8 +11,12 @@ import Navbar from "../../Layout/Navbar";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
+import {
+  useWeb3ModalState,
+} from '@web3modal/ethers5/react';
+const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredit, credit }) => {
+  const { address } = useWeb3ModalState();
+  console.log("address", address);
   const navigate = useNavigate()
   const [active_div, setActive_div] = useState(true);
   const [dropActive, setDropActive] = useState(false);
@@ -71,29 +75,40 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
         count
       }
       if (getToken) {
-        setLoading(true);
-        let response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/replicate/image-generate`,
-          object,
-          {
-            headers: {
-              Authorization: `Bearer ${getToken}`,
-            },
+        if (credit.credit > 0) {
+          setLoading(true);
+          let response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/replicate/image-generate`,
+            object,
+            {
+              headers: {
+                Authorization: `Bearer ${getToken}`,
+              },
+            }
+          );
+          if (response.status == 200) {
+            toast.success(response?.data?.message);
+            let responseCredit = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+              {
+                headers: {
+                  Authorization: `Bearer ${getToken}`,
+                },
+              })
+            setCredit(responseCredit?.data?.result)
+            setPrompt("");
+            getImage();
           }
-        );
-        if (response.status == 200) {
-          toast.success(response?.data?.message);
-          setPrompt("");
-          getImage();
+        } else {
+          toast.error("Please make a purchase to add credit first.")
         }
       } else {
         toast.error("token is missing , please signIn again");
       }
     } catch (e) {
-      if(e?.response?.status == 401){
+      if (e?.response?.status == 401) {
         toast.error("Authentication failed! please Login again")
         navigate("/")
-      } else{
+      } else {
         toast.error(e.message);
       }
     } finally {
@@ -124,7 +139,8 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   return (
     <>
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
-      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
+        credit={credit} />
       <div className="col-lg-9 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">
@@ -140,9 +156,8 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
 
           <div className="row mt-2">
             <div
-              className={` order-lg-1 order-2 col-lg-${
-                active_div ? "9" : "12"
-              }`}
+              className={` order-lg-1 order-2 col-lg-${active_div ? "9" : "12"
+                }`}
             >
               <div className="d-flex pt-3 justify-content-between px-5">
                 <h3>Image Generation</h3>
@@ -227,9 +242,8 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
               </div>
             </div>
             <div
-              className={` px-2 order-lg-2 order-1 img-container-right-div col-lg-${
-                active_div ? "3 d-block" : "3 d-none"
-              }`}
+              className={` px-2 order-lg-2 order-1 img-container-right-div col-lg-${active_div ? "3 d-block" : "3 d-none"
+                }`}
             >
               <Scrollbars style={{ width: "100%", height: 500 }}>
                 <div className="Main-div position-relative p-2">

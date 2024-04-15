@@ -8,7 +8,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import Sidebar from "../../Layout/Sidebar";
 import Navbar from "../../Layout/Navbar";
 
-const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
+const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credit }) => {
   const [active_div, setActive_div] = useState(true);
   const [dropActive, setDropActive] = useState(false);
   const [dropTwoActive, setDropTwoActive] = useState(false);
@@ -22,7 +22,8 @@ const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar }) => {
   return (
     <>
     <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
-      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
+                credit={credit}/>
     <div className="col-lg-9 home-h order-lg-3 mt-5">
       <div className="mt-5 bg-black">
       <div className="p-4">
