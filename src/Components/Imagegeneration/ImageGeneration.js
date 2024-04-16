@@ -141,7 +141,7 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
       <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
         credit={credit} />
-      <div className="col-lg-9 home-h order-lg-3 mt-5">
+      <div className="col-lg-10 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">
             <div className="bg-img-div">
@@ -159,8 +159,8 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
               className={` order-lg-1 order-2 col-lg-${active_div ? "9" : "12"
                 }`}
             >
-              <div className="d-flex pt-3 justify-content-between px-5">
-                <h3>Image Generation</h3>
+              <div className="d-flex pt-3 justify-content-between px-4">
+                <h4>Image Generation</h4>
                 <div className="img-container-div-w">
                   This will Use four tokens per generated image.
                   <button
@@ -183,12 +183,12 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
                 {error && !prompt && (
                   <span className="text-danger">fill the Input</span>
                 )}
-                <input
+                {/* <input
                   class=" image-c-i mt-3 px-3"
                   type="search"
                   placeholder=" Negative Prompt"
                   aria-label="Search"
-                />
+                /> */}
                 <div className="mt-3 d-flex justify-content-end">
                   <button
                     className="generate-bnt"
@@ -249,8 +249,8 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
                 <div className="Main-div position-relative p-2">
                   {/* <div className="dropdown-head d-flex justify-content-between "> */}
                   <div className="d-flex">
-                    <div className="px-2 d-flex flex-column">
-                      <span className="light-p">Select Model</span>
+                    <div className=" d-flex flex-column mb-2">
+                    Select Model
                       {/* <span> DALL.E 3</span> */}
                     </div>
                   </div>
@@ -271,7 +271,7 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
                   </select>
                 </div>
 
-                <div className="px-2 mt-5">
+                <div className="px-2 mt-4">
                   Number of images:
                   <div className="counting-div mt-2 d-flex">
                     <button

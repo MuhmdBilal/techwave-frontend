@@ -143,7 +143,7 @@ const EditImage = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
       <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
                 credit={credit}/>
-      <div className="col-lg-9 home-h order-lg-3 mt-5">
+      <div className="col-lg-10 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">
             <div className="bg-img-div">
@@ -161,8 +161,8 @@ const EditImage = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
                 active_div ? "9" : "12"
               }`}
             >
-              <div className="d-flex pt-3 justify-content-between px-5">
-                <h3>Edit / Upscale Image</h3>
+              <div className="d-flex pt-3 justify-content-between px-4">
+                <h4>Edit / Upscale Image</h4>
                 <div className="img-container-div-w">
                   This will Use four tokens per generated image.
                   <button
@@ -245,8 +245,8 @@ const EditImage = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
               <div className="Main-div position-relative p-2">
                 <div className="dropdown-head d-flex justify-content-between ">
                   <div className="d-flex">
-                    <div className=" px-2 d-flex flex-column">
-                      <span className="light-p"> Select Model</span>
+                    <div className="d-flex flex-column">
+                    Select Model
                     </div>
                   </div>
                 </div>
@@ -264,8 +264,8 @@ const EditImage = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
                 </select>
               </div>
               <div className="px-2 mt-3">
-                <span>Image</span>
-                <div>
+              Image
+                <div className="mt-2">
                   <input type="file" accept="image/*" onChange={handleImageChange}  />
                 </div>
                 {error && (

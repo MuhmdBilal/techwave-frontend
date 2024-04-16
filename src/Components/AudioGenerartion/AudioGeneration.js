@@ -105,7 +105,6 @@ const AudioGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
       setRecord(response?.data?.result);
     } catch (e) {
       console.log("e", e);
-      // toast.error(e.message);
     } finally {
       setRecordLoading(false);
     }
@@ -118,7 +117,7 @@ const AudioGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
       <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
       <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
                 credit={credit}/>
-      <div className="col-lg-9 home-h order-lg-3 mt-5">
+      <div className="col-lg-10 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">
             <div className="bg-img-div">
@@ -136,8 +135,8 @@ const AudioGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
                 active_div ? "9" : "12"
               }`}
             >
-              <div className="d-flex pt-3 justify-content-between px-5">
-                <h3>Audio Generation</h3>
+              <div className="d-flex pt-3 justify-content-between px-4">
+                <h4>Audio Generation</h4>
                 <div className="img-container-div-w">
                   This will Use four tokens per generated image.
                   <button
@@ -226,8 +225,8 @@ const AudioGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
                 <div className="Main-div position-relative p-2">
                   <div className="dropdown-head d-flex justify-content-between ">
                     <div className="d-flex">
-                      <div className=" px-2 d-flex flex-column">
-                        <span className="light-p">Model Version</span>
+                      <div className="d-flex flex-column">
+                      Model Version
                       </div>
                     </div>
                   </div>

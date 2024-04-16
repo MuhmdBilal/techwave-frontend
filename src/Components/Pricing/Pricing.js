@@ -527,31 +527,31 @@ const Pricing = ({
         setCredit={setCredit}
         credit={credit}
       />
-      <div className="col-lg-9 home-h order-lg-3 mt-5">
+      <div className="col-lg-10 home-h order-lg-3 mt-5">
         <div className="mt-5 bg-black">
           <div className="p-4">
             <div className="bg-img-div">
               <div className="mt-5 px-5">
-                <h1 className="pt-4">WELCOME</h1>
+                <h2 className="pt-4">WELCOME</h2>
                 <div className="d-flex">
-                  <h1>TO</h1> <h1 className="ms-3 bg-home-heading">TECHWAVE</h1>
+                  <h2>TO</h2> <h2 className="ms-3 bg-home-heading">TECHWAVE</h2>
                 </div>
               </div>
             </div>
           </div>
           <div className="pt-4">
             <div className=" text-center">
-              <h1 className="mt-5">Simple Pricing, Unbeatable Value</h1>
+              <h3 className="mt-3">Simple Pricing, Unbeatable Value</h3>
               <h6>
                 Usage-based payment. Pay as you go with your wallet. Take
                 control of everything.
               </h6>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-11 px-3 mx-auto">
                 <div className="row">
                   <div className="col-lg-3 mt-2">
-                    <div className="price-card  pt-4 text-center card">
+                    <div className="price-card  pt-4 m-2 text-center card">
                       <h3>Personal</h3>
                       <h1>$15</h1>
                       <p>50 Tokens</p>
@@ -593,7 +593,7 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card  pt-4 text-center card">
+                    <div className="price-card m-2 pt-4 text-center card">
                       <h3>Premium</h3>
                       <h1>$20</h1>
                       <p>100 Tokens</p>
@@ -635,7 +635,7 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card  pt-4 text-center card">
+                    <div className="price-card m-2 pt-4 text-center card">
                       <h3>Enterprice</h3>
                       <h1>$30</h1>
                       <p>150 Tokens</p>
@@ -677,7 +677,7 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card  pt-4 text-center card">
+                    <div className="price-card m-2  pt-4 text-center card">
                       <h3>Diamond</h3>
                       <h1>$40</h1>
                       <p>200 Tokens</p>

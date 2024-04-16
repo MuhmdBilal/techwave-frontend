@@ -43,23 +43,23 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       }, [location.pathname]);
   return (
     <div
-      className={`sidebar   side-bar col-lg-3 order-lg-1 order-1 bg-black d-lg-block${
+      className={`sidebar   side-bar col-lg-2 order-lg-1 order-1 bg-black d-lg-block${
         showSidebar ? "d-block " : " d-none"
       }`}
     >
-      <div className="ps-5">
-        <div className="ps-lg-5  mt-3">
+      <div className="ps-3">
+        <div className="  mt-3">
          <div className="d-flex justify-content-between px-1">
          <div className="d-flex pt-3 ms-2">
             <img className="side-bar-logo" src={logo} />
             <div className="d-flex align-items-center ps-2">
-              <h3>TechWave</h3>
+              <h4>TechWave</h4>
             </div>
           </div>
           <div className="d-flex py-3">
-        <button className="connect-btn d-lg-none d-block px-3">
+        {/* <button className="connect-btn d-lg-none d-block px-3">
                 Connect Wallet
-              </button>
+              </button> */}
         </div>
 
          </div>
@@ -67,8 +67,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
         </div>
         <NavLink onClick={() => {
             setActive("/home") }} to="/home">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-5 ${active === "/home" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div mt-4 ${active === "/home" && "btn-active"}`}>
+          <div className="d-flex ">
             <IoHomeOutline className={`mt-1 sidebar-icon ${active === "/home" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/home" && "is-active"}`}>Home</p>
           </div>
@@ -76,8 +76,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/imagegeneration") }} to="/imagegeneration">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/imagegeneration" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div  ${active === "/imagegeneration" && "btn-active"}`}>
+          <div className="d-flex">
             <CiImageOn className={`mt-1 sidebar-icon ${active === "/imagegeneration" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/imagegeneration" && "is-active"}`}>Image Generation</p>
           </div>
@@ -85,8 +85,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/editimage") }} to="/editimage">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/editimage" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/editimage" && "btn-active"}`}>
+          <div className="d-flex ">
             <CiImageOn className={`mt-1 sidebar-icon ${active === "/editimage" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/editimage" && "is-active"}`}>Edit/Upscale Image</p>
           </div>
@@ -94,8 +94,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/videogeneration") }} to="/videogeneration">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/videogeneration" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/videogeneration" && "btn-active"}`}>
+          <div className="d-flex">
             <IoVideocamOutline className={`mt-1 sidebar-icon ${active === "/videogeneration" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/videogeneration" && "is-active"}`}>Video Generation</p>
           </div>
@@ -103,8 +103,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/audiogeneration") }} to="/audiogeneration">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/audiogeneration" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/audiogeneration" && "btn-active"}`}>
+          <div className="d-flex">
             <MdOutlineAudioFile className={`mt-1 sidebar-icon ${active === "/audiogeneration" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/audiogeneration" && "is-active"}`}>Audio Generation</p>
           </div>
@@ -112,8 +112,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/aichatbot") }} to="/aichatbot">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/aichatbot" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/aichatbot" && "btn-active"}`}>
+          <div className="d-flex">
             <IoChatboxEllipsesOutline className={`mt-1 sidebar-icon ${active === "/aichatbot" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/aichatbot" && "is-active"}`}>AI Chat Bot</p>
           </div>
@@ -121,8 +121,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/pricing") }} to="/pricing">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/pricing" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/pricing" && "btn-active"}`}>
+          <div className="d-flex">
             <BsCurrencyDollar className={`mt-1 sidebar-icon ${active === "/pricing" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/pricing" && "is-active"}`}>Pricing</p>
           </div>
@@ -130,8 +130,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       </NavLink>
 
       <NavLink onClick={() => { setActive("/placeholder") }} to="/placeholder">
-        <button onClick={handleLinkClick} className={`sidebar-content-div ps-3 mt-4 ${active === "/placeholder" && "btn-active"}`}>
-          <div className="d-flex ps-3 pt-2">
+        <button onClick={handleLinkClick} className={`sidebar-content-div ${active === "/placeholder" && "btn-active"}`}>
+          <div className="d-flex">
             <BsCurrencyDollar className={`mt-1 sidebar-icon ${active === "/placeholder" && "icon-active"}`} />
             <p className={`ps-2 nav-btn ${active === "/placeholder" && "is-active"}`}>Placeholder</p>
           </div>
@@ -139,8 +139,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
 
       </NavLink>
       <NavLink>
-       <button onClick={handleLinkClick} className="sidebar-content-div ps-3 mt-4">
-          <div className="d-flex ps-3 pt-2">
+       <button onClick={handleLinkClick} className="sidebar-content-div">
+          <div className="d-flex">
             {/* <img className="icon-img-sidebar" src={a} alt="a"/> */}
 
             <GoQuestion className=" mt-1 sidebar-icon" />
@@ -154,8 +154,8 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
         <button onClick={()=>{
           navigate("/")
           localStorage.clear()
-        }} className="sidebar-content-div ps-3 mt-4">
-          <div className="d-flex ps-3 pt-2">
+        }} className="sidebar-content-div">
+          <div className="d-flex">
             {/* <img className="icon-img-sidebar" src={a} alt="a"/> */}
             <IoIosLogOut className=" mt-1 sidebar-icon" />
 

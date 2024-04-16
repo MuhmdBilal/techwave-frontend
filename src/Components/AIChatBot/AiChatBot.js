@@ -1,5 +1,5 @@
 import "./AiChatBot.css";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaList } from "react-icons/fa6";
 import a from "../../Media/dalle.avif";
 import { IoIosArrowDown } from "react-icons/io";
@@ -7,11 +7,25 @@ import { LuSendHorizonal } from "react-icons/lu";
 import { AiOutlinePlus } from "react-icons/ai";
 import Sidebar from "../../Layout/Sidebar";
 import Navbar from "../../Layout/Navbar";
-
-const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credit }) => {
+import axios from "axios";
+import ai from "../../Media/ai.png";
+import user from "../../Media/user.png";
+const AiChatBot = ({
+  handleLinkClick,
+  showSidebar,
+  toggleSidebar,
+  setCredit,
+  credit,
+}) => {
   const [active_div, setActive_div] = useState(true);
   const [dropActive, setDropActive] = useState(false);
   const [dropTwoActive, setDropTwoActive] = useState(false);
+  const [record, setRecord] = useState([]);
+  const [recordLoading, setRecordLoading] = useState(true);
+  const getToken = localStorage.getItem("token");
+  const [error, setError] = useState(false);
+  const [textLoading, setTextLodaing] = useState(false);
+  const [text, setText] = useState("");
   const toggle = () => {
     setActive_div(!active_div);
     console.log("Toggling active");
@@ -19,14 +33,80 @@ const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
   const dropdown = () => {
     setDropActive(!dropActive);
   };
+  const handleChat = async () => {
+    try {
+      if (!text) {
+        setError(true);
+        return;
+      }
+      setError(false);
+      setTextLodaing(true);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/replicate/chat-box`,
+        { prompt: text },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken}`,
+          },
+        }
+      );
+      if (response) {
+        setText("")
+        getImage();
+        scrollToBottom()
+      }
+    } catch (e) {
+      console.log("e", e);
+    } finally {
+      setTextLodaing(false);
+    }
+  };
+
+  const getImage = async () => {
+    try {
+      let response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/replicate/get-Chat`,
+        {
+          headers: {
+            Authorization: `Bearer ${getToken}`,
+          },
+        }
+      );
+      setRecord(response?.data?.result);
+    } catch (e) {
+      console.log("e", e);
+    } finally {
+      setRecordLoading(false);
+    }
+  };
+  useEffect(() => {
+    getImage();
+  }, []);
+
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to bottom when record or recordLoading changes
+    scrollToBottom();
+  }, [record, recordLoading]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
   return (
     <>
-    <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
-      <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
-                credit={credit}/>
-    <div className="col-lg-9 home-h order-lg-3 mt-5">
-      <div className="mt-5 bg-black">
-      <div className="p-4">
+      <Sidebar handleLinkClick={handleLinkClick} showSidebar={showSidebar} />
+      <Navbar
+        toggleSidebar={toggleSidebar}
+        showSidebar={showSidebar}
+        setCredit={setCredit}
+        credit={credit}
+      />
+      <div className="col-lg-10 home-h order-lg-3 mt-5">
+        <div className="mt-4 bg-black">
+          {/* <div className="p-4">
         <div className="bg-img-div">
           <div className="mt-5 px-5">
             <h1 className="pt-4">WELCOME</h1>
@@ -36,213 +116,84 @@ const AiChatBot = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credi
           </div>
         </div>
 
-        </div>
-        <div className="row mt-3">
-          <div
-            className={` order-lg-1 px-5 order-2 col-lg-${active_div ? "9" : "12"}`}
-          >
-            <div className="d-flex pt-3 justify-content-between ">
-              <h3>AI Chat Bot</h3>
-              <div className="img-container-div-w">
-                This will Use four tokens per generated image.
-                <button
-                  onClick={toggle}
-                  className=" ms-2 img-container-div-icon"
-                >
-                  <FaList />
-                </button>
+        </div> */}
+          <div className="row mt-3">
+            <div
+              className={` order-lg-1 px-5 order-2 col-lg-${
+                active_div ? "12" : "12"
+              }`}
+            >
+              <div className="d-flex pt-3 justify-content-between ">
+                <h3>AI Chat Bot</h3>
               </div>
-            </div>
-            <div className="chat-msg-main-div pt-4 px-5">
-              <div className="position-relative text-div d-flex align-items-center">
-                <div className="u-span px-3 pb-1">You</div>
-                <div className=" px-3">
-                  <p>bilal</p>
-                  
+              <div className="chat-msg-main-div-main pt-4 pb-4" >
+                <div className="chat-msg-main-div pb-2" ref={chatContainerRef}>
+                {recordLoading ? (
+                  <div className="d-flex justify-content-center pt-5 pb-5">
+                    <div className="spinner-border text-light" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {record?.length > 0 ? (
+                      record?.map((item, index) => {
+                        return (
+                          <div key={index}>
+                            <div className="ps-3 d-flex align-items-center mt-4">
+                              <img
+                                src={item?.person == "User" ? user : ai}
+                                alt="log"
+                                width={item?.person == "User" ? 30 : 35}
+                              />{" "}
+                              <span className="user-person">
+                                {item?.person}
+                              </span>
+                            </div>
+                            <p className="ps-4 pt-3 flex-wrap pe-3 d-flex align-items-center text-chat">
+                              {item?.chat}
+                            </p>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <div className="d-flex justify-content-center pt-5 pb-5">
+                        <span>Chat is empty</span>
+                      </div>
+                    )}
+                  </>
+                )}
                 </div>
-              </div>
-            </div>
-            <div className="send-msg-div mt-4 d-flex justify-content-between align-items-center px-3">
-              <input type="text" className=""/>
-              <div className="send-msg-icon-div d-flex justify-content-center align-items-center">
-              <LuSendHorizonal />
-
-              </div>
-
-
-            </div>
-          </div>
-          <div
-            className={` px-2 order-lg-2 order-1 img-container-right-div col-lg-${
-              active_div ? "3 d-block" : "3 d-none"
-            }`}
-          > 
-            <div className="right-sidebar-ai px-2">
-              <div className="new-chat-div pt-2">
-              <button className="d-flex  align-items-center">
-               <span className="new-chat-div-icon"><AiOutlinePlus /></span> 
-                <span className="ms-5">New Chat</span>
-                </button>
                 
-
               </div>
-
-            </div>
-            <div className="chat-history-main-div px-3 pt-3">
-
-              <span>History</span>
-
-            <button className="history-data-btn">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            <button className="history-data-btn mt-2">07/04/2024 23:39</button>
-            </div>
-         <div className="Main-div-config">
-
-         
-            <div className="Main-div mt-2 position-relative p-2">
-              <h3 className="py-2">Configuration</h3>
-              <div className="dropdown-head d-flex justify-content-between ">
-                <div className="d-flex">
-                  <div>
-                    <img src={a} alt="a" className="dropdown-icon-img" />
-                  </div>
-                  <div className=" px-2 d-flex flex-column">
-                    <span className="light-p">Model</span>
-                    <span> DALL.E 3</span>
-                  </div>
-                </div>
-                <div>
-                <button onClick={dropdown} className="arrow-icon-btn p-1">
-                    
-                    Select Model <IoIosArrowDown />
-                  </button>
-                </div>
+              <div className="send-msg-div mt-2 d-flex justify-content-between align-items-center px-3">
+                <input
+                  type="text"
+                  className=""
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                />
+                <button
+                  className="send-msg-icon-div d-flex justify-content-center align-items-center"
+                  onClick={handleChat}
+                  disabled={textLoading}
+                >
+                  <LuSendHorizonal />
+                </button>
               </div>
-              {dropActive && (
-                <div className="dropdown-content d-flex flex-column ">
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
-                  <butotn className="drop-content-btn d-flex justify-content-center align-items-center">
-                    Abcdeireonoienvei
-                  </butotn>
+              {textLoading && (
+                <div className="d-flex align-items-center mt-2 mb-5">
+                  <div class="spinner-grow text-light-sm" role="status">
+                  </div>
+                  <span className="ms-2">Lodaing ...</span>
                 </div>
               )}
-            </div>
-            <div className="px-2 mt-3">
-              <h5>System_Prompt</h5>
-              <div>
-                <input type="text" className="big-input mt-2" />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-             <h5> Max_New_Tokens</h5>
-              <div>
-                <input className="n-input mt-2" type="number" />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-             <h5> Min_New_Tokens</h5>
-              <div>
-                <input className="n-input mt-2" type="number" />
-              </div>
-            </div>    
-            <div className="px-2 mt-5">
-              <h5>temprature</h5>
-              <div>
-                {/* <label for="customRange2" class="form-label">Example range</label> */}
-                <input
-                  type="range"
-                  class="form-range mt-2"
-                  min="0"
-                  max="5"
-                  id="customRange2"
-                />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-              <h5>top_p</h5>
-              <div>
-                {/* <label for="customRange2" class="form-label">Example range</label> */}
-                <input
-                  type="range"
-                  class="form-range mt-2"
-                  min="0"
-                  max="5"
-                  id="customRange2"
-                />
-              </div>
-            </div>
-            <div className="px-2 mt-3">
-              <h5>Repetition_penality</h5>
-              <div>
-                <input type="text" className="big-input mt-2" />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-             <h5>stop_sequence</h5>
-              <div>
-                <input className="n-input mt-2" type="number" />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-              <h5>Seed</h5>
-              <div>
-                <input className="n-input mt-2" type="number" />
-              </div>
-            </div>
-            <div className="px-2 mt-5">
-              <h5>Debug</h5>
-              <div class="form-check form-switch mt-2">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="flexSwitchCheckChecked"
-                  checked
-                />
-              </div>
-            </div>
-            <div className="px-2 mt-3">
-              <h5>Prompt_template</h5>
-              <div>
-                <input type="text" className="big-input mt-2" />
-              </div>
-            </div>
+              {error && <span className="text-danger">fill the Input</span>}
             </div>
           </div>
         </div>
       </div>
-    </div>
     </>
-    
   );
 };
 
