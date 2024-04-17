@@ -10,7 +10,7 @@ const Placeholder = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,cre
       <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
                 credit={credit}/>
       <div className="col-lg-10 home-h order-lg-3 mt-5">
-        <div className="mt-5 bg-black">
+        <div className="mt-5">
           <div className="row">
             <div className="col-lg-9 order-lg-1 order-2">
               <div className="pt-1">

@@ -78,10 +78,10 @@ const Navbar = ({ toggleSidebar, showSidebar,setCredit,credit }) => {
     getCredit()
   },[])
   return (
-    <div className="col-lg-10 navbar-p order-lg-2 bg-black position-absolute order-1" >
+    <div className="col-lg-10 navbar-p order-lg-2 position-absolute order-1" >
       <div className="row" >
         <div className="col-11 mx-auto">
-          <nav class="navbar navbar-h navbar-expand-lg navbar-dark bg-black" >
+          <nav class="navbar navbar-h navbar-expand-lg navbar-dark" >
             <div class="container-fluid">
               <a class="navbar-brand mt-3 mb-3" href="#">
                 {/* Connect-Wallet */}

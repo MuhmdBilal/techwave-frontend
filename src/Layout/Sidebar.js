@@ -43,7 +43,7 @@ const Sidebar = ({ showSidebar, handleLinkClick }) => {
       }, [location.pathname]);
   return (
     <div
-      className={`sidebar   side-bar col-lg-2 order-lg-1 order-1 bg-black d-lg-block${
+      className={`sidebar   side-bar col-lg-2 order-lg-1 order-1 d-lg-block${
         showSidebar ? "d-block " : " d-none"
       }`}
     >

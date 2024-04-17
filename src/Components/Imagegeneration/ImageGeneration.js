@@ -142,7 +142,7 @@ const ImageGeneration = ({ handleLinkClick, showSidebar, toggleSidebar, setCredi
       <Navbar toggleSidebar={toggleSidebar} showSidebar={showSidebar} setCredit={setCredit}
         credit={credit} />
       <div className="col-lg-10 home-h order-lg-3 mt-5">
-        <div className="mt-5 bg-black">
+        <div className="mt-5">
           <div className="p-4">
             <div className="bg-img-div">
               <div className="mt-5 px-5">

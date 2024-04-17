@@ -19,7 +19,7 @@ const Home = ({ handleLinkClick, showSidebar, toggleSidebar,setCredit,credit }) 
                 />
 
       <div className="col-lg-10 home-h order-lg-3 mt-5">
-        <div className="mt-5 bg-black px-5">
+        <div className="mt-5  px-5">
           <div className="pt-3">
             <div className="bg-img-div">
               <div className="mt-5 px-5">
