@@ -10,6 +10,7 @@ import { USDTAbi, USDTaddress } from "../../utils/usdtContract";
 import Web3 from "web3";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { bonsAiAddress, bonsAiAbi } from "../../utils/bonsAi";
 const Pricing = ({
   handleLinkClick,
   showSidebar,
@@ -55,15 +56,25 @@ const Pricing = ({
     const minting_Contract = new web3.eth.Contract(USDTAbi, USDTaddress);
     return minting_Contract;
   };
-  function getBNBRate() {
-    return fetch("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT")
-      .then((response) => response.json())
-      .then((data) => parseFloat(data.price));
+ async function getBNBRate() {
+    try {
+      const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      return response.data.ethereum.usd;
+  } catch (error) {
+      console.error('Error fetching Ethereum price:', error);
+      return null;
+  }
   }
 
-  function calculateBNBAmount(packageAmount, bnbRate) {
-    return packageAmount / bnbRate;
+  async function calculateBNBAmount(packageAmount) {
+    const ethereumPrice = await getBNBRate();
+    if (ethereumPrice) {
+        return packageAmount / ethereumPrice;
+    } else {
+        return null;
+    }
   }
+
   async function checkBNBBalance() {
     const accounts = await web3.eth.getAccounts();
     const userAddress = accounts[0];
@@ -81,6 +92,31 @@ const Pricing = ({
     return web3.eth.sendTransaction(txData);
   }
 
+  const bonsPriceGet = async (value, userAddress) => {
+    try{
+      let apiResponse = await axios.get("https://deep-index.moralis.io/api/v2/erc20/0x401E6d25C2991824299aA5DbE67C82486A64381D/price",  {headers: {
+        'accept': 'application/json',
+        'X-API-Key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjExZGU2NmEyLWJmODktNDUxOS1hNzM4LTY1NWFjYTgyM2U4OSIsIm9yZ0lkIjoiMzg4Mzc1IiwidXNlcklkIjoiMzk5MDc5IiwidHlwZUlkIjoiYjIxNDdlNGUtZDdhYS00MDBjLWIyZDUtY2FhOGViMjcyNGNmIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MTMzNjg0MDgsImV4cCI6NDg2OTEyODQwOH0.7_Q7GHwO-RDV06sdpuk9joiaQ678APPGoSza3EYWMz8'
+    }
+      })
+      let calculatePrice = apiResponse?.data?.usdPrice * value
+      calculatePrice = calculatePrice.toFixed(3)
+      let price = web3.utils.toWei(calculatePrice.toString(), "ether");
+      const minting_Contract = new web3.eth.Contract(bonsAiAbi, bonsAiAddress);
+     let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
+     return await minting_Contract.methods
+       .transfer(recipient, price.toString())
+       .send({
+         from: userAddress,
+       });
+    }catch(e){
+      setPaymentMethodLoading30(false);
+      setPaymentMethodLoading15(false);
+      setPaymentMethodLoading20(false);
+      setPaymentMethodLoading40(false);
+      console.log("e", e)
+    }
+  }
 
   const handleBuy15 = async (num) => {
     try {
@@ -94,7 +130,7 @@ const Pricing = ({
         setPaymentMethodLoading15(true);
         if (userAddress) {
           let contract = integrateContract();
-          let price = web3.utils.toWei(num.toString(), "ether");
+          let price = num * 1000000
           let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
           let transfer = await contract.methods
             .transfer(recipient, price)
@@ -107,7 +143,7 @@ const Pricing = ({
               payment: num,
               fromAddress: transfer?.from,
               transactionHash: transfer?.transactionHash,
-              token: 50,
+              token: 500,
             };
             const response = await axios.post(
               `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -140,7 +176,7 @@ const Pricing = ({
         setPaymentMethodLoading15(true);
         if (userAddress) {
           const bnbRate = await getBNBRate();
-          const bnbAmount = calculateBNBAmount(num, bnbRate);
+          const bnbAmount = await calculateBNBAmount(num, bnbRate);
           const userBalance = await checkBNBBalance();
           if (userBalance >= bnbAmount) {
             const recipientAddress =
@@ -152,7 +188,7 @@ const Pricing = ({
                 payment: num,
                 fromAddress: transfers?.from,
                 transactionHash: transfers?.transactionHash,
-                token: 50,
+                token: 500,
               };
               const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -185,6 +221,45 @@ const Pricing = ({
           toast.error("Please Wallet connect first!");
           setPaymentMethodLoading15(false);
         }
+      } else if (paymentMethod15 == "bonsai"){
+        setPaymentMethodLoading15(true);
+        if(userAddress){
+          const bonsAiResponse = await bonsPriceGet(num, userAddress)
+          if(bonsAiResponse){
+            const object = {
+              payment_method: paymentMethod15,
+              payment: num,
+              fromAddress: bonsAiResponse?.from,
+              transactionHash: bonsAiResponse?.transactionHash,
+              token: 500,
+            };
+            const response = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
+              object,
+              {
+                headers: {
+                  Authorization: `Bearer ${getToken}`,
+                },
+              }
+            );
+            if (response) {
+              let responseCredit = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${getToken}`,
+                  },
+                }
+              );
+              setCredit(responseCredit?.data?.result);
+              toast.success("Transaction successful!");
+              setPaymentMethodLoading15(false);
+            }
+          }
+        }else{
+          toast.error("Please Wallet connect first!");
+          setPaymentMethodLoading15(false);
+        }
       }
     } catch (e) {
       console.log("e", e);
@@ -203,7 +278,7 @@ const Pricing = ({
         setPaymentMethodLoading20(true);
         if (userAddress) {
           let contract = integrateContract();
-          let price = web3.utils.toWei(num.toString(), "ether");
+          let price = num * 1000000
           let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
           let transfer = await contract.methods
             .transfer(recipient, price)
@@ -216,7 +291,7 @@ const Pricing = ({
               payment: num,
               fromAddress: transfer?.from,
               transactionHash: transfer?.transactionHash,
-              token: 100,
+              token: 1500,
             };
             const response = await axios.post(
               `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -261,7 +336,7 @@ const Pricing = ({
                 payment: num,
                 fromAddress: transfers?.from,
                 transactionHash: transfers?.transactionHash,
-                token: 100,
+                token: 1500,
               };
               const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -294,10 +369,49 @@ const Pricing = ({
           toast.error("Please Wallet connect first!");
           setPaymentMethodLoading20(false);
         }
+      } else if (paymentMethod20 == "bonsai"){
+        setPaymentMethodLoading20(true);
+        if(userAddress){
+          const bonsAiResponse = await bonsPriceGet(num, userAddress)
+          if(bonsAiResponse){
+            const object = {
+              payment_method: paymentMethod15,
+              payment: num,
+              fromAddress: bonsAiResponse?.from,
+              transactionHash: bonsAiResponse?.transactionHash,
+              token: 1500,
+            };
+            const response = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
+              object,
+              {
+                headers: {
+                  Authorization: `Bearer ${getToken}`,
+                },
+              }
+            );
+            if (response) {
+              let responseCredit = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${getToken}`,
+                  },
+                }
+              );
+              setCredit(responseCredit?.data?.result);
+              toast.success("Transaction successful!");
+              setPaymentMethodLoading20(false);
+            }
+          }
+        }else{
+          toast.error("Please Wallet connect first!");
+          setPaymentMethodLoading20(false);
+        }
       }
     } catch (e) {
       console.log("e", e);
-      setPaymentMethodLoading20(true);
+      setPaymentMethodLoading20(false);
     }
   };
   const handleBuy30 = async (num) => {
@@ -312,7 +426,7 @@ const Pricing = ({
         setPaymentMethodLoading30(true)
         if (userAddress) {
           let contract = integrateContract();
-          let price = web3.utils.toWei(num.toString(), "ether");
+          let price = num * 1000000
           let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
           let transfer = await contract.methods
             .transfer(recipient, price)
@@ -325,7 +439,7 @@ const Pricing = ({
               payment: num,
               fromAddress: transfer?.from,
               transactionHash: transfer?.transactionHash,
-              token: 150,
+              token: 4000,
             };
             const response = await axios.post(
               `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -370,7 +484,7 @@ const Pricing = ({
                 payment: num,
                 fromAddress: transfers?.from,
                 transactionHash: transfers?.transactionHash,
-                token: 150,
+                token: 4000,
               };
               const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -403,6 +517,45 @@ const Pricing = ({
           toast.error("Please Wallet connect first!");
           setPaymentMethodLoading30(false);
         }
+      } else if (paymentMethod30 == "bonsai"){
+        setPaymentMethodLoading30(true);
+        if(userAddress){
+          const bonsAiResponse = await bonsPriceGet(num, userAddress)
+          if(bonsAiResponse){
+            const object = {
+              payment_method: paymentMethod15,
+              payment: num,
+              fromAddress: bonsAiResponse?.from,
+              transactionHash: bonsAiResponse?.transactionHash,
+              token: 4000,
+            };
+            const response = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
+              object,
+              {
+                headers: {
+                  Authorization: `Bearer ${getToken}`,
+                },
+              }
+            );
+            if (response) {
+              let responseCredit = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${getToken}`,
+                  },
+                }
+              );
+              setCredit(responseCredit?.data?.result);
+              toast.success("Transaction successful!");
+              setPaymentMethodLoading30(false);
+            }
+          }
+        }else{
+          toast.error("Please Wallet connect first!");
+          setPaymentMethodLoading30(false);
+        }
       }
     } catch (e) {
       console.log("e", e);
@@ -421,7 +574,7 @@ const Pricing = ({
         setPaymentMethodLoading40(true)
         if (userAddress) {
           let contract = integrateContract();
-          let price = web3.utils.toWei(num.toString(), "ether");
+          let price = num * 1000000
           let recipient = "0x6A35f74Bc3785a1cb9E729f9a16D2840b2Dc18Ac";
           let transfer = await contract.methods
             .transfer(recipient, price)
@@ -434,7 +587,7 @@ const Pricing = ({
               payment: num,
               fromAddress: transfer?.from,
               transactionHash: transfer?.transactionHash,
-              token: 200,
+              token: 10000,
             };
             const response = await axios.post(
               `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -479,7 +632,7 @@ const Pricing = ({
                 payment: num,
                 fromAddress: transfers?.from,
                 transactionHash: transfers?.transactionHash,
-                token: 200,
+                token: 10000,
               };
               const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
@@ -509,6 +662,45 @@ const Pricing = ({
             setPaymentMethodLoading40(false);
           }
         } else {
+          toast.error("Please Wallet connect first!");
+          setPaymentMethodLoading40(false);
+        }
+      } else if (paymentMethod40 == "bonsai"){
+        setPaymentMethodLoading40(true);
+        if(userAddress){
+          const bonsAiResponse = await bonsPriceGet(num, userAddress)
+          if(bonsAiResponse){
+            const object = {
+              payment_method: paymentMethod15,
+              payment: num,
+              fromAddress: bonsAiResponse?.from,
+              transactionHash: bonsAiResponse?.transactionHash,
+              token: 10000,
+            };
+            const response = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/auth/pricing`,
+              object,
+              {
+                headers: {
+                  Authorization: `Bearer ${getToken}`,
+                },
+              }
+            );
+            if (response) {
+              let responseCredit = await axios.get(
+                `${process.env.REACT_APP_API_URL}/api/auth/get-credit`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${getToken}`,
+                  },
+                }
+              );
+              setCredit(responseCredit?.data?.result);
+              toast.success("Transaction successful!");
+              setPaymentMethodLoading40(false);
+            }
+          }
+        }else{
           toast.error("Please Wallet connect first!");
           setPaymentMethodLoading40(false);
         }
@@ -547,14 +739,14 @@ const Pricing = ({
                 control of everything.
               </h6>
             </div>
-            <div className="row mt-4">
-              <div className="col-11 px-3 mx-auto">
-                <div className="row">
+            <div className="row mt-4" >
+              <div className="col-11 px-3" >
+                <div className="row ">
                   <div className="col-lg-3 mt-2">
-                    <div className="price-card  pt-4 m-2 text-center card">
-                      <h3>Personal</h3>
-                      <h1>$15</h1>
-                      <p>50 Tokens</p>
+                    <div className="price-card  pt-4 m-2 text-center">
+                      <h4>Personal</h4>
+                      <h2>$10</h2>
+                      <p className="text-white">500 Credits</p>
                       <select
                         className="arrow-icon-btn-price p-1 ms-3 me-3"
                         onChange={handlePaymentMethodChange15}
@@ -563,6 +755,7 @@ const Pricing = ({
                         <option defaultChecked>Select payment method</option>
                         <option value="usdt">USDT</option>
                         <option value="ethereum">Ethereum</option>
+                        <option value="bonsai">BonsAi</option>
                       </select>
                       {paymentMethodError15 && !paymentMethod15 && (
                         <span className="text-danger">
@@ -572,7 +765,7 @@ const Pricing = ({
                       <div>
                         <button
                           className="buy-btn-price mb-3 mt-3"
-                          onClick={() => handleBuy15(15)}
+                          onClick={() => handleBuy15(10)}
                           disabled={paymentMethodLoading15}
                         >
                           {paymentMethodLoading15 ? (
@@ -593,10 +786,10 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card m-2 pt-4 text-center card">
-                      <h3>Premium</h3>
-                      <h1>$20</h1>
-                      <p>100 Tokens</p>
+                    <div className="price-card m-2 pt-4 text-center">
+                      <h4>Premium</h4>
+                      <h2>$20</h2>
+                      <p className="text-white">1500 Credits</p>
                       <select
                         className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3"
                         onChange={handlePaymentMethodChange20}
@@ -605,6 +798,7 @@ const Pricing = ({
                         <option defaultChecked>Select payment method</option>
                         <option value="usdt">USDT</option>
                         <option value="ethereum">Ethereum</option>
+                        <option value="bonsai">BonsAi</option>
                       </select>
                       {paymentMethodError20 && !paymentMethod20 && (
                         <span className="text-danger">
@@ -635,10 +829,10 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card m-2 pt-4 text-center card">
-                      <h3>Enterprice</h3>
-                      <h1>$30</h1>
-                      <p>150 Tokens</p>
+                    <div className="price-card m-2 pt-4 text-center ">
+                      <h4>Enterprice</h4>
+                      <h2>$50</h2>
+                      <p className="text-white">4000 Credit</p>
                       <select
                         className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3"
                         onChange={handlePaymentMethodChange30}
@@ -647,6 +841,7 @@ const Pricing = ({
                         <option defaultChecked>Select payment method</option>
                         <option value="usdt">USDT</option>
                         <option value="ethereum">Ethereum</option>
+                        <option value="bonsai">BonsAi</option>
                       </select>
                       {paymentMethodError30 && !paymentMethod30 && (
                         <span className="text-danger">
@@ -656,7 +851,7 @@ const Pricing = ({
                       <div>
                         <button
                           className="buy-btn-price mb-2 mt-2"
-                          onClick={() => handleBuy30(30)}
+                          onClick={() => handleBuy30(50)}
                           disabled={paymentMethodLoading30}
                         >
                           {paymentMethodLoading30 ? (
@@ -677,10 +872,10 @@ const Pricing = ({
                     </div>
                   </div>
                   <div className="col-lg-3  mt-2">
-                    <div className="price-card m-2  pt-4 text-center card">
-                      <h3>Diamond</h3>
-                      <h1>$40</h1>
-                      <p>200 Tokens</p>
+                    <div className="price-card m-2  pt-4 text-center">
+                      <h4>Diamond</h4>
+                      <h2>$100</h2>
+                      <p className="text-white">10000 Credit</p>
                       <select
                         className="arrow-icon-btn-price p-1 mb-3 ms-3 me-3"
                         onChange={handlePaymentMethodChange40}
@@ -689,6 +884,7 @@ const Pricing = ({
                         <option defaultChecked>Select payment method</option>
                         <option value="usdt">USDT</option>
                         <option value="ethereum">Ethereum</option>
+                        <option value="bonsai">BonsAi</option>
                       </select>
                       {paymentMethodError40 && !paymentMethod40 && (
                         <span className="text-danger">
@@ -698,7 +894,7 @@ const Pricing = ({
                       <div>
                         <button
                           className="buy-btn-price mb-2 mt-2"
-                          onClick={() => handleBuy40(40)}
+                          onClick={() => handleBuy40(100)}
                           disabled={paymentMethodLoading40}
                         >
                           {paymentMethodLoading40 ? (

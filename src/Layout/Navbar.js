@@ -21,20 +21,20 @@ const chains = [
     explorerUrl: 'https://etherscan.io',
     rpcUrl: 'https://cloudflare-eth.com',
   },
-  {
-    chainId: 42161,
-    name: 'Arbitrum',
-    currency: 'ETH',
-    explorerUrl: 'https://arbiscan.io',
-    rpcUrl: 'https://arb1.arbitrum.io/rpc',
-  },
-  {
-    chainId: 97,
-    name: 'BSC Testnet',
-    currency: 'BNB',
-    explorerUrl: 'https://explorer.binance.org/smart-testnet',
-    rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-  },
+  // {
+  //   chainId: 42161,
+  //   name: 'Arbitrum',
+  //   currency: 'ETH',
+  //   explorerUrl: 'https://arbiscan.io',
+  //   rpcUrl: 'https://arb1.arbitrum.io/rpc',
+  // },
+  // {
+  //   chainId: 97,
+  //   name: 'BSC Testnet',
+  //   currency: 'BNB',
+  //   explorerUrl: 'https://explorer.binance.org/smart-testnet',
+  //   rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+  // },
 ];
 
 const ethersConfig = defaultConfig({
