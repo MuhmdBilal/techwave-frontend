@@ -99,7 +99,7 @@ const Pricing = ({
         'X-API-Key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6IjExZGU2NmEyLWJmODktNDUxOS1hNzM4LTY1NWFjYTgyM2U4OSIsIm9yZ0lkIjoiMzg4Mzc1IiwidXNlcklkIjoiMzk5MDc5IiwidHlwZUlkIjoiYjIxNDdlNGUtZDdhYS00MDBjLWIyZDUtY2FhOGViMjcyNGNmIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE3MTMzNjg0MDgsImV4cCI6NDg2OTEyODQwOH0.7_Q7GHwO-RDV06sdpuk9joiaQ678APPGoSza3EYWMz8'
     }
       })
-      let calculatePrice = apiResponse?.data?.usdPrice * value
+      let calculatePrice =  value / apiResponse?.data?.usdPrice
       calculatePrice = calculatePrice.toFixed(3)
       let price = web3.utils.toWei(calculatePrice.toString(), "ether");
       const minting_Contract = new web3.eth.Contract(bonsAiAbi, bonsAiAddress);
